@@ -11,6 +11,7 @@ A fast, lightweight micro-service for generating QR codes as SVG images. Built w
 - 🧪 **Tested**: Comprehensive test suite
 - 🐳 **Docker Ready**: Multi-stage production build
 - ☁️ **Railway Ready**: Deploy with one click
+- 📚 **API Documentation**: Interactive Swagger/OpenAPI docs
 
 ## Quick Start
 
@@ -44,6 +45,40 @@ curl "http://localhost:3000/v1/qr?data=https%3A%2F%2Fexample.com"
 # Health check
 curl "http://localhost:3000/healthz"
 ```
+
+## API Documentation
+
+### Interactive Swagger UI
+
+The API includes comprehensive interactive documentation powered by Swagger/OpenAPI:
+
+- **📖 Interactive Docs**: `http://localhost:3000/docs`
+- **📄 OpenAPI JSON**: `http://localhost:3000/docs/json`
+
+### Features
+
+- **🔍 Live Testing**: Test endpoints directly from the browser
+- **📝 Parameter Validation**: Automatic validation of request parameters
+- **📊 Response Examples**: See expected response formats
+- **🏷️ Organized Endpoints**: Grouped by functionality
+- **🔄 Real-time Updates**: Documentation updates with code changes
+
+### Using the Swagger UI
+
+1. **Navigate to**: `http://localhost:3000/docs`
+2. **Expand Endpoints**: Click on any endpoint to see details
+3. **Test Parameters**: Fill in the required parameters
+4. **Execute**: Click "Try it out" to test the API
+5. **View Response**: See the actual response from the server
+
+### OpenAPI Specification
+
+The API follows OpenAPI 3.0.3 specification with:
+
+- **Info**: Title, version, and description
+- **Paths**: All available endpoints
+- **Schemas**: Request/response validation
+- **Tags**: Organized endpoint grouping
 
 ## API Reference
 
@@ -121,6 +156,9 @@ yarn lint
 
 # Fix linting issues
 yarn lint:fix
+
+# Start server and open docs
+yarn docs:dev
 ```
 
 ### Project Structure
@@ -131,6 +169,7 @@ src/
 ├── v1/
 │   └── routes.ts      # API routes with caching
 ├── server.ts          # Main server with health check
+├── swagger.ts         # Swagger/OpenAPI configuration
 └── encode.test.ts     # Tests
 ```
 
@@ -151,6 +190,16 @@ The service uses the following default settings:
 - **Version:** Auto-select
 - **Margin:** 4 modules (configurable)
 - **Output Format:** SVG
+
+### Swagger Configuration
+
+The API documentation is configured with:
+
+- **OpenAPI Version:** 3.0.3
+- **UI Route:** `/docs`
+- **JSON Route:** `/docs/json`
+- **UI Config:** List expansion, no deep linking
+- **Auto-generation:** From route schemas
 
 ## Deployment
 
