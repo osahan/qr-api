@@ -1,0 +1,9 @@
+{
+  "services": [
+    {
+      "name": "qr-api",
+      "startCommand": "node dist/server.js",
+      "healthcheckPath": "/healthz"
+    }
+  ]
+}
