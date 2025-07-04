@@ -12,7 +12,7 @@ export async function generateQRCode(
 ): Promise<string> {
   const { margin = 4, errorCorrectionLevel = 'M', version } = options;
 
-  const qrOptions: QRCode.QRCodeToDataURLOptions = {
+  const qrOptions: QRCode.QRCodeToStringOptions = {
     margin,
     errorCorrectionLevel,
     type: 'svg',
