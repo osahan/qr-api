@@ -10,6 +10,29 @@ interface QRRequestQuery {
 export default async function routes(fastify: FastifyInstance) {
   fastify.get<{ Querystring: QRRequestQuery }>(
     '/qr',
+    {
+      schema: {
+        tags: ['qr'],
+        querystring: {
+          type: 'object',
+          required: ['data'],
+          properties: {
+            data: {
+              type: 'string',
+              minLength: 1,
+              description: 'Text or URL to encode',
+            },
+            margin: { type: 'integer', minimum: 0, maximum: 10, default: 4 },
+          },
+        },
+        response: {
+          200: {
+            description: 'SVG image.',
+            type: 'string',
+          },
+        },
+      },
+    },
     async (request, reply) => {
       const { data, margin = '4' } = request.query;
 

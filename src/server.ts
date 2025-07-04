@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import v1Routes from './v1/routes.js';
+import swaggerPlugin from './swagger.js';
 
 const server = Fastify({
   logger: {
@@ -7,10 +8,26 @@ const server = Fastify({
   },
 });
 
+// Register Swagger plugin
+await server.register(swaggerPlugin);
+
 // Health check endpoint
-server.get('/healthz', async (request, reply) => {
-  return reply.type('text/plain').send('ok');
-});
+server.get(
+  '/healthz',
+  {
+    schema: {
+      response: {
+        200: {
+          description: 'Health check response',
+          type: 'string',
+        },
+      },
+    },
+  },
+  async (request, reply) => {
+    return reply.type('text/plain').send('ok');
+  }
+);
 
 // Register v1 API routes
 server.register(v1Routes, { prefix: '/v1' });
