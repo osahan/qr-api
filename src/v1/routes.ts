@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { generateQRCode } from '../encode.js';
 import crypto from 'crypto';
+import { authenticateApiKey } from '../middleware/auth.js';
 
 interface QRRequestQuery {
   data: string;
@@ -11,8 +12,14 @@ export default async function routes(fastify: FastifyInstance) {
   fastify.get<{ Querystring: QRRequestQuery }>(
     '/qr',
     {
+      preHandler: authenticateApiKey,
       schema: {
         tags: ['qr'],
+        security: [
+          {
+            apiKey: [],
+          },
+        ],
         querystring: {
           type: 'object',
           required: ['data'],
@@ -29,6 +36,14 @@ export default async function routes(fastify: FastifyInstance) {
           200: {
             description: 'SVG image.',
             type: 'string',
+          },
+          401: {
+            description: 'Unauthorized - Invalid or missing API key',
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+              message: { type: 'string' },
+            },
           },
         },
       },

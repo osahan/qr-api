@@ -18,11 +18,12 @@
   "dependencies": {
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^2.1.0",
+    "dotenv": "^17.2.0",
     "fastify": "^4.24.3",
     "qrcode": "^1.5.3"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
+    "@types/node": "^24.1.0",
     "@types/qrcode": "^1.5.5",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
@@ -35,5 +36,6 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

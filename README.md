@@ -5,6 +5,7 @@ A fast, lightweight micro-service for generating QR codes as SVG images. Built w
 ## Features
 
 - 🚀 **Fast**: Built with Fastify 4 for high performance
+- 🔐 **Secure**: API key authentication for all endpoints
 - 🎯 **SVG Output**: Clean, scalable QR codes
 - 💾 **Smart Caching**: ETag-based caching with immutable headers
 - 🔧 **TypeScript**: Full type safety
@@ -30,20 +31,79 @@ cd qr-api
 # Install dependencies
 yarn install
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env and set your API_KEY
+
 # Start development server
 yarn dev
 ```
 
 The server will start on `http://localhost:3000`
 
+### Environment Variables
+
+Create a `.env` file with the following variables:
+
+```bash
+# API Configuration
+API_KEY=your-secure-api-key-here
+
+# Server Configuration
+PORT=3000
+LOG_LEVEL=info
+```
+
 ### Test the API
 
 ```bash
-# Generate a QR code
-curl "http://localhost:3000/v1/qr?data=https%3A%2F%2Fexample.com"
+# Generate a QR code (replace YOUR_API_KEY with your actual API key)
+curl -H "X-API-Key: YOUR_API_KEY" "http://localhost:3000/v1/qr?data=https%3A%2F%2Fexample.com"
 
 # Health check
 curl "http://localhost:3000/healthz"
+```
+
+## Authentication
+
+All API endpoints (except health check) require API key authentication.
+
+### API Key Setup
+
+1. **Set Environment Variable**: Add `API_KEY=your-secure-api-key-here` to your `.env` file
+2. **Generate Secure Key**: Use a strong, random string (recommended: 32+ characters)
+3. **Keep Secret**: Never commit your API key to version control
+
+### Authentication Methods
+
+The API accepts API keys in two formats:
+
+#### Method 1: X-API-Key Header (Recommended)
+```bash
+curl -H "X-API-Key: your-api-key-here" "http://localhost:3000/v1/qr?data=test"
+```
+
+#### Method 2: Authorization Header (Bearer Token)
+```bash
+curl -H "Authorization: Bearer your-api-key-here" "http://localhost:3000/v1/qr?data=test"
+```
+
+### Error Responses
+
+**Missing API Key (401):**
+```json
+{
+  "error": "API key is required",
+  "message": "Please provide an API key in the X-API-Key header or Authorization header"
+}
+```
+
+**Invalid API Key (401):**
+```json
+{
+  "error": "Invalid API key",
+  "message": "The provided API key is invalid"
+}
 ```
 
 ## API Documentation
@@ -86,6 +146,12 @@ The API follows OpenAPI 3.0.3 specification with:
 
 **Endpoint:** `GET /v1/qr`
 
+**Authentication:** Required (API Key)
+
+**Headers:**
+- `X-API-Key`: Your API key (recommended)
+- `Authorization`: Bearer token (alternative)
+
 **Query Parameters:**
 
 | Parameter | Type | Required | Default | Description |
@@ -103,10 +169,13 @@ The API follows OpenAPI 3.0.3 specification with:
 
 ```bash
 # Basic usage
-curl "http://localhost:3000/v1/qr?data=https%3A%2F%2Fexample.com"
+curl -H "X-API-Key: your-api-key-here" "http://localhost:3000/v1/qr?data=https%3A%2F%2Fexample.com"
 
 # With custom margin
-curl "http://localhost:3000/v1/qr?data=Hello%20World&margin=2"
+curl -H "X-API-Key: your-api-key-here" "http://localhost:3000/v1/qr?data=Hello%20World&margin=2"
+
+# Using Authorization header
+curl -H "Authorization: Bearer your-api-key-here" "http://localhost:3000/v1/qr?data=test"
 ```
 
 **Response Headers:**
@@ -179,6 +248,7 @@ src/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `API_KEY` | - | **Required** - API key for authentication |
 | `PORT` | 3000 | Server port |
 | `LOG_LEVEL` | info | Logging level |
 
@@ -252,6 +322,7 @@ This ensures optimal performance and reduces server load.
 The API returns appropriate HTTP status codes:
 
 - **400 Bad Request:** Missing or invalid parameters
+- **401 Unauthorized:** Missing or invalid API key
 - **500 Internal Server Error:** QR generation failures
 
 Error responses include descriptive messages:

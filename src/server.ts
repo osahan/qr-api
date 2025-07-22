@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Fastify from 'fastify';
 import v1Routes from './v1/routes.js';
 import swaggerPlugin from './swagger.js';
